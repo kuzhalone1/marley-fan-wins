@@ -2,39 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Marley Fans Industrial Design System
+All colors MUST be HSL. Professional B2B industrial aesthetic.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Industrial Color Palette */
+    --background: 0 0% 98%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Brand Colors - Professional Industrial */
+    --primary: 214 88% 37%;        /* Primary Blue #1e40af */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 215 14% 34%;      /* Industrial Gray */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent-orange: 20 91% 48%;   /* Energy Orange #ea580c */
+    --accent-orange-foreground: 0 0% 100%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --success: 142 76% 36%;        /* Success Green #16a34a */
+    --success-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 214 88% 37%;
+
+    /* Industrial Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(214 88% 37%) 0%, hsl(215 14% 34%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(20 91% 48%) 0%, hsl(20 91% 42%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(142 76% 30%) 100%);
+
+    /* Industrial Shadows */
+    --shadow-industrial: 0 4px 20px -2px hsl(214 88% 37% / 0.15);
+    --shadow-card: 0 2px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-button: 0 2px 8px -1px hsl(214 88% 37% / 0.3);
+
+    /* Professional Typography */
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
     --radius: 0.5rem;
 
@@ -100,6 +122,61 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  /* Industrial Button Variants */
+  .btn-hero {
+    @apply bg-accent-orange hover:bg-accent-orange/90 text-accent-orange-foreground shadow-button;
+    background: var(--gradient-accent);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-hero:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-button);
+  }
+
+  .btn-secondary-action {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground shadow-button;
+    background: var(--gradient-hero);
+  }
+
+  .btn-whatsapp {
+    @apply bg-success hover:bg-success/90 text-success-foreground shadow-button;
+    background: var(--gradient-success);
+  }
+
+  /* Industrial Cards */
+  .industrial-card {
+    @apply bg-card border border-border rounded-lg p-6 transition-all duration-300;
+    box-shadow: var(--shadow-card);
+  }
+
+  .industrial-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-industrial);
+  }
+
+  /* Trust Indicators */
+  .trust-metric {
+    @apply text-accent-orange font-bold text-lg;
+  }
+
+  /* Section Spacing */
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
   }
 }
