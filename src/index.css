@@ -135,8 +135,9 @@ All colors MUST be HSL. Professional B2B industrial aesthetic.
 @layer components {
   /* Industrial Button Variants */
   .btn-hero {
-    @apply bg-accent-orange hover:bg-accent-orange/90 text-accent-orange-foreground shadow-button;
+    @apply bg-accent-orange hover:bg-accent-orange/90 text-accent-orange-foreground;
     background: var(--gradient-accent);
+    box-shadow: var(--shadow-button);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -146,13 +147,15 @@ All colors MUST be HSL. Professional B2B industrial aesthetic.
   }
 
   .btn-secondary-action {
-    @apply bg-primary hover:bg-primary/90 text-primary-foreground shadow-button;
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground;
     background: var(--gradient-hero);
+    box-shadow: var(--shadow-button);
   }
 
   .btn-whatsapp {
-    @apply bg-success hover:bg-success/90 text-success-foreground shadow-button;
+    @apply bg-success hover:bg-success/90 text-success-foreground;
     background: var(--gradient-success);
+    box-shadow: var(--shadow-button);
   }
 
   /* Industrial Cards */
