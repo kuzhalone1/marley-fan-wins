@@ -60,14 +60,24 @@ const HeroSection = () => {
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             
-            <Button 
-              size="lg" 
-              className="btn-secondary-action w-full sm:w-auto text-lg px-8 py-4 rounded-full font-semibold"
-              onClick={() => navigate('/roi-calculator')}
-            >
-              <Calculator className="mr-2 h-5 w-5" />
-              Calculate Your Savings
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <Button 
+                size="lg" 
+                className="btn-secondary-action text-lg px-8 py-4 rounded-full font-semibold"
+                onClick={() => navigate('/roi-calculator')}
+              >
+                <Calculator className="mr-2 h-5 w-5" />
+                Calculate Your Savings
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="text-lg px-8 py-4 rounded-full font-semibold border-white text-white hover:bg-white hover:text-primary"
+                onClick={() => navigate('/products')}
+              >
+                View All Products
+              </Button>
+            </div>
             
             <Button 
               size="lg" 
