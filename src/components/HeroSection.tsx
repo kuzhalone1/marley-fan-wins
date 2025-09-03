@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calculator, Phone, MessageCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-industrial-bg.jpg";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
@@ -60,6 +63,7 @@ const HeroSection = () => {
             <Button 
               size="lg" 
               className="btn-secondary-action w-full sm:w-auto text-lg px-8 py-4 rounded-full font-semibold"
+              onClick={() => navigate('/roi-calculator')}
             >
               <Calculator className="mr-2 h-5 w-5" />
               Calculate Your Savings
