@@ -7,8 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Phone, Mail, MessageCircle, MapPin, Building, DollarSign, Clock, Calculator } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const FinalConversion = () => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     // Personal Information
     name: '',
@@ -38,10 +40,44 @@ const FinalConversion = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsLoading(true);
+
+    try {
+      const webhookData = {
+        ...formData,
+        formType: 'free-assessment-calculator',
+        timestamp: new Date().toISOString(),
+        source: 'ROI Calculator - Final Conversion'
+      };
+
+      const response = await fetch('https://sravanhyd.app.n8n.cloud/webhook-test/construction-lead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
+        body: JSON.stringify(webhookData),
+      });
+
+      setSubmitted(true);
+      toast({
+        title: "Assessment Scheduled!",
+        description: "Our expert will contact you within 24 hours to schedule your free facility assessment.",
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Submission Failed", 
+        description: "Please try again or contact us directly at +91 90300 34982",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -384,9 +420,9 @@ const FinalConversion = () => {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-4 pt-4">
-                  <Button type="submit" size="lg" className="btn-hero">
+                  <Button type="submit" size="lg" className="btn-hero" disabled={isLoading}>
                     <Calendar className="w-4 h-4 mr-2" />
-                    Book Free Assessment
+                    {isLoading ? "Submitting..." : "Book Free Assessment"}
                   </Button>
                   <Button type="button" size="lg" variant="outline">
                     <DollarSign className="w-4 h-4 mr-2" />

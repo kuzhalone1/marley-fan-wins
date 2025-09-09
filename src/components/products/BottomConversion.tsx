@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export const BottomConversion = () => {
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,12 +33,60 @@ export const BottomConversion = () => {
     authority: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Consultation Request Submitted!",
-      description: "Our expert will contact you within 2 hours during business hours.",
-    });
+    setIsLoading(true);
+
+    try {
+      const webhookData = {
+        ...formData,
+        formType: 'expert-consultation-products',
+        timestamp: new Date().toISOString(),
+        source: 'Products Page'
+      };
+
+      const response = await fetch('https://sravanhyd.app.n8n.cloud/webhook-test/construction-lead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
+        body: JSON.stringify(webhookData),
+      });
+
+      toast({
+        title: "Consultation Request Submitted!",
+        description: "Our expert will contact you within 2 hours during business hours.",
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        industry: "",
+        facilitySize: "",
+        ceilingHeight: "",
+        currentCooling: "",
+        budget: "",
+        timeline: "",
+        challenges: "",
+        preferredContact: "",
+        urgency: "",
+        authority: ""
+      });
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Submission Failed",
+        description: "Please try again or contact us directly at +91 90300 34982",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -294,9 +343,9 @@ export const BottomConversion = () => {
 
                 {/* Submit Buttons */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6">
-                  <Button type="submit" size="lg" className="w-full">
+                  <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
                     <Calendar className="h-4 w-4 mr-2" />
-                    Book Free Consultation
+                    {isLoading ? "Submitting..." : "Book Free Consultation"}
                   </Button>
                   
                   <Button type="button" variant="outline" size="lg" className="w-full">

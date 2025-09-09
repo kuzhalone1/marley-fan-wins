@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X, Download, FileText, Users, Calendar, CreditCard, Wrench } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface LeadCaptureGatewayProps {
   results: {
@@ -15,6 +16,7 @@ interface LeadCaptureGatewayProps {
 }
 
 const LeadCaptureGateway = ({ results, onClose }: LeadCaptureGatewayProps) => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,11 +26,46 @@ const LeadCaptureGateway = ({ results, onClose }: LeadCaptureGatewayProps) => {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    setSubmitted(true);
+    setIsLoading(true);
+
+    try {
+      const webhookData = {
+        ...formData,
+        formType: 'savings-calculator-lead',
+        annualSavings: results.annualSavings,
+        paybackPeriod: results.paybackPeriod,
+        timestamp: new Date().toISOString(),
+        source: 'ROI Calculator'
+      };
+
+      const response = await fetch('https://sravanhyd.app.n8n.cloud/webhook-test/construction-lead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
+        body: JSON.stringify(webhookData),
+      });
+
+      setSubmitted(true);
+      toast({
+        title: "Report Request Submitted!",
+        description: "Your detailed savings report will be sent to your email within 15 minutes.",
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Submission Failed",
+        description: "Please try again or contact us directly at +91 90300 34982",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -190,8 +227,8 @@ const LeadCaptureGateway = ({ results, onClose }: LeadCaptureGatewayProps) => {
                 </Select>
               </div>
 
-              <Button type="submit" className="w-full btn-hero text-lg py-3">
-                Send My Complete Report
+              <Button type="submit" className="w-full btn-hero text-lg py-3" disabled={isLoading}>
+                {isLoading ? "Sending..." : "Send My Complete Report"}
               </Button>
 
               <div className="text-center">

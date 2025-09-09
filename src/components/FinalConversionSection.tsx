@@ -5,9 +5,83 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Shield, Clock, Phone, Mail, MessageCircle, Calculator, Users, FileText } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const FinalConversionSection = () => {
+  const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    industry: '',
+    facilitySize: '',
+    location: '',
+    currentCooling: '',
+    timeline: '',
+    budget: '',
+    requirements: ''
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const webhookData = {
+        ...formData,
+        formType: 'free-assessment-homepage',
+        timestamp: new Date().toISOString(),
+        source: 'Homepage Final Conversion'
+      };
+
+      const response = await fetch('https://sravanhyd.app.n8n.cloud/webhook-test/construction-lead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
+        body: JSON.stringify(webhookData),
+      });
+
+      toast({
+        title: "Assessment Request Submitted!",
+        description: "Our expert will contact you within 2 hours during business hours.",
+      });
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        industry: '',
+        facilitySize: '',
+        location: '',
+        currentCooling: '',
+        timeline: '',
+        budget: '',
+        requirements: ''
+      });
+      setCurrentStep(1);
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Submission Failed",
+        description: "Please try again or contact us directly at +91 90300 34982",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
     <section className="section-padding bg-gradient-to-br from-primary/5 to-accent-orange/5">
@@ -110,7 +184,7 @@ const FinalConversionSection = () => {
                 </div>
               </div>
 
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Step 1: Basic Info */}
                 {currentStep === 1 && (
                   <div className="space-y-4">
@@ -119,22 +193,47 @@ const FinalConversionSection = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="name">Full Name *</Label>
-                        <Input id="name" placeholder="Enter your name" required />
+                        <Input 
+                          id="name" 
+                          placeholder="Enter your name" 
+                          required 
+                          value={formData.name}
+                          onChange={(e) => handleInputChange('name', e.target.value)}
+                        />
                       </div>
                       <div>
                         <Label htmlFor="email">Email Address *</Label>
-                        <Input id="email" type="email" placeholder="your@company.com" required />
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          placeholder="your@company.com" 
+                          required 
+                          value={formData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                        />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="phone">Phone Number *</Label>
-                        <Input id="phone" placeholder="+91 XXXXX XXXXX" required />
+                        <Input 
+                          id="phone" 
+                          placeholder="+91 XXXXX XXXXX" 
+                          required 
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                        />
                       </div>
                       <div>
                         <Label htmlFor="company">Company Name *</Label>
-                        <Input id="company" placeholder="Your company" required />
+                        <Input 
+                          id="company" 
+                          placeholder="Your company" 
+                          required 
+                          value={formData.company}
+                          onChange={(e) => handleInputChange('company', e.target.value)}
+                        />
                       </div>
                     </div>
                   </div>
@@ -148,7 +247,7 @@ const FinalConversionSection = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="industry">Industry Type</Label>
-                        <Select>
+                        <Select value={formData.industry} onValueChange={(value) => handleInputChange('industry', value)}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select industry" />
                           </SelectTrigger>
@@ -164,18 +263,28 @@ const FinalConversionSection = () => {
                       </div>
                       <div>
                         <Label htmlFor="size">Facility Size (sq ft)</Label>
-                        <Input id="size" placeholder="e.g., 50,000" />
+                        <Input 
+                          id="size" 
+                          placeholder="e.g., 50,000" 
+                          value={formData.facilitySize}
+                          onChange={(e) => handleInputChange('facilitySize', e.target.value)}
+                        />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="location">Location (City)</Label>
-                        <Input id="location" placeholder="Enter city" />
+                        <Input 
+                          id="location" 
+                          placeholder="Enter city" 
+                          value={formData.location}
+                          onChange={(e) => handleInputChange('location', e.target.value)}
+                        />
                       </div>
                       <div>
                         <Label htmlFor="cooling">Current Cooling System</Label>
-                        <Select>
+                        <Select value={formData.currentCooling} onValueChange={(value) => handleInputChange('currentCooling', value)}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select current system" />
                           </SelectTrigger>
@@ -199,7 +308,7 @@ const FinalConversionSection = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="timeline">Implementation Timeline</Label>
-                        <Select>
+                        <Select value={formData.timeline} onValueChange={(value) => handleInputChange('timeline', value)}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select timeline" />
                           </SelectTrigger>
@@ -213,7 +322,7 @@ const FinalConversionSection = () => {
                       </div>
                       <div>
                         <Label htmlFor="budget">Budget Range</Label>
-                        <Select>
+                        <Select value={formData.budget} onValueChange={(value) => handleInputChange('budget', value)}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select budget" />
                           </SelectTrigger>
@@ -233,6 +342,8 @@ const FinalConversionSection = () => {
                         id="requirements" 
                         placeholder="Tell us about your cooling challenges, energy goals, or any specific requirements..."
                         rows={3}
+                        value={formData.requirements}
+                        onChange={(e) => handleInputChange('requirements', e.target.value)}
                       />
                     </div>
                   </div>
@@ -261,9 +372,9 @@ const FinalConversionSection = () => {
                     </Button>
                   ) : (
                     <div className="flex-1 space-y-3">
-                      <Button type="submit" className="w-full btn-hero">
+                      <Button type="submit" className="w-full btn-hero" disabled={isLoading}>
                         <Users className="mr-2 h-5 w-5" />
-                        Get Free Assessment
+                        {isLoading ? "Submitting..." : "Get Free Assessment"}
                       </Button>
                       <div className="grid grid-cols-2 gap-2">
                         <Button type="submit" variant="outline" size="sm">
