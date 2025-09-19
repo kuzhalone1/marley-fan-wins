@@ -37,6 +37,7 @@ const FinalConversionSection = () => {
         source: 'Homepage Final Conversion'
       };
 
+      // Send to original webhook
       const response = await fetch('https://sravanhyd.app.n8n.cloud/webhook-test/construction-lead', {
         method: 'POST',
         headers: {
@@ -45,6 +46,32 @@ const FinalConversionSection = () => {
         mode: 'no-cors',
         body: JSON.stringify(webhookData),
       });
+
+      // Send to custom webhook
+      try {
+        const customWebhookData = {
+          fullName: formData.name,
+          emailAddress: formData.email,
+          phoneNumber: formData.phone,
+          companyName: formData.company,
+          implementationTimeline: formData.timeline,
+          budgetRange: formData.budget,
+          specificRequirements: formData.requirements,
+          timestamp: new Date().toISOString(),
+          formType: 'free-assessment'
+        };
+
+        await fetch('https://premboddu.app.n8n.cloud/webhook-test/3c97c29b-e5ad-4324-a288-86e73d5f3f66', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          mode: 'no-cors',
+          body: JSON.stringify(customWebhookData),
+        });
+      } catch (customWebhookError) {
+        console.error('Custom webhook failed:', customWebhookError);
+      }
 
       toast({
         title: "Assessment Request Submitted!",
