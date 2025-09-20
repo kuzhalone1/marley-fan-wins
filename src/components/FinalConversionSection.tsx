@@ -61,7 +61,7 @@ const FinalConversionSection = () => {
           formType: 'free-assessment'
         };
 
-        await fetch('https://premboddu.app.n8n.cloud/webhook-test/3c97c29b-e5ad-4324-a288-86e73d5f3f66', {
+        await fetch('https://premboddu.app.n8n.cloud/webhook/3c97c29b-e5ad-4324-a288-86e73d5f3f66', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
