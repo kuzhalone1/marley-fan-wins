@@ -50,27 +50,37 @@ const FinalConversionSection = () => {
       // Send to custom webhook
       try {
         const customWebhookData = {
-          fullName: formData.name,
-          emailAddress: formData.email,
-          phoneNumber: formData.phone,
-          companyName: formData.company,
-          implementationTimeline: formData.timeline,
-          budgetRange: formData.budget,
-          specificRequirements: formData.requirements,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          industry: formData.industry,
+          facilitySize: formData.facilitySize,
+          location: formData.location,
+          currentCooling: formData.currentCooling,
+          timeline: formData.timeline,
+          budget: formData.budget,
+          requirements: formData.requirements,
           timestamp: new Date().toISOString(),
           formType: 'free-assessment'
         };
 
-        await fetch('https://premboddu.app.n8n.cloud/webhook/3c97c29b-e5ad-4324-a288-86e73d5f3f66', {
+        const response = await fetch('https://premboddu.app.n8n.cloud/webhook/3c97c29b-e5ad-4324-a288-86e73d5f3f66', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          mode: 'no-cors',
           body: JSON.stringify(customWebhookData),
         });
+
+        if (!response.ok) {
+          throw new Error(`Webhook failed with status: ${response.status}`);
+        }
+
+        console.log('Webhook data sent successfully:', customWebhookData);
       } catch (customWebhookError) {
         console.error('Custom webhook failed:', customWebhookError);
+        // Don't throw error to prevent form submission failure
       }
 
       toast({
